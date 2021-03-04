@@ -1,0 +1,6 @@
+.civicrm_leaflet_filter > label {
+    display: block;
+}
+.civicrm_leaflet_filter_checkbox_item {
+    display: block;
+}
