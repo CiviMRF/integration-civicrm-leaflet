@@ -153,7 +153,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
 
   /**
    * Function to convert a date value to CiviCRM's format (yyyymmdd)
-   * 
+   *
    * @param dateValue
    * @returns {string}
    */

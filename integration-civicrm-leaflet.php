@@ -50,6 +50,9 @@ function integration_civicrm_leaflet_enqueue_scripts() {
 }
 
 function integration_civicrm_leaflet_data() {
+  $lat_property = $_POST['lat_property'];
+  $lng_property = $_POST['lng_property'];
+  $addr_property = $_POST['addr_property'];
   $apiEntity = $_POST['api_entity'];
   $apiAction = $_POST['api_action'];
   $apiProfileId = $_POST['api_profile_id'];
@@ -61,12 +64,24 @@ function integration_civicrm_leaflet_data() {
   $features = [];
   if (isset($reply['values']) && is_array($reply['values'])) {
     foreach ($reply['values'] as $row) {
+      if ($lng_property && !empty($row[$lng_property]) && $lat_property && !empty($row[$lat_property])) {
+        $lng = $row[$lng_property];
+        $lat = $row[$lat_property];
+      } elseif ($addr_property && !empty($row[$addr_property])) {
+        include_once LEAFLET_MAP__PLUGIN_DIR . 'class.geocoder.php';
+        $location = new Leaflet_Geocoder($row[$addr_property]);
+        $lat = $location->lat;
+        $lng = $location->lng;
+      }
+      if (empty($lng) || empty($lat)) {
+        continue;
+      }
       $feature = [
         'type' => 'Feature',
         'properties' => $row,
         'geometry' => [
           'type' => 'Point',
-          'coordinates' => [$row['longitude'], $row['latitude']]
+          'coordinates' => [$lng, $lat]
         ]
       ];
       $features[] = $feature;

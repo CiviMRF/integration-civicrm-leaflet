@@ -52,6 +52,13 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
       return "";
     }
 
+    $lat_property = empty($lat_property) ? '' : $lat_property;
+    $lng_property = empty($lng_property) ? '' : $lng_property;
+    $addr_property = empty($addr_property) ? '' : $addr_property;
+    if ((empty($lng_property) || empty($lat_property)) && empty($addr_property)) {
+      return "";
+    }
+
     $filters = [];
     $getFieldsParams['api_action'] = $action;
     $getFieldsOptions = [];
@@ -109,6 +116,9 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
           'api_action': '<?php echo esc_js($action); ?>',
           'api_profile_id': '<?php echo esc_js($profile); ?>',
           'cache': '<?php echo esc_js($cache); ?>',
+          'lng_property': '<?php echo esc_js($lng_property); ?>',
+          'lat_property': '<?php echo esc_js($lat_property); ?>',
+          'addr_property': '<?php echo esc_js($addr_property); ?>'
         };
 
         var CiviCRMLeaflet = new IntegrationCiviCRMLeaflet(

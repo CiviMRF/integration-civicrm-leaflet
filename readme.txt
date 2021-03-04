@@ -21,7 +21,7 @@ which gives you the ability to connect to an CiviCRM installation on a different
 
 You can use the short code as follows:
 
-  [leaflet-civicrm-api entity=.. action=... profile=local tooltip_text='Name: {display_name}' ...]
+  [leaflet-civicrm-api entity=.. action=... lng_property='longitude' lat_property='latitude' profile=local tooltip_text='Name: {display_name}' ...]
     <strong>{display_name}</strong>
   [/leaflet-civicrm-api]
 
@@ -32,6 +32,9 @@ Option | Required | Default value | Description
 entity | Yes | | The api entity in CiviCRM.
 action | Yes | | The api action in CiviCRM.
 profile | Yes | | If you have installed CiviCRM in the same wordpress site then the profile could be `local` otherwise use the name of the [CiviMcRestFace](https://wordpress.org/plugins/connector-civicrm-mcrestface/) connection.
+lng_property | Yes | | Fill in the property which holds the longitude value. Not required when `addr_property` is provided.
+lat_property | Yes | | Fill in the property which holds the longitude value. Not required when `addr_property` is provided.
+addr_property | Only when lng_property and lat_property are not provided | | Fill in the property which holds the address value. This plugin will then convert that address to a point on the map.
 tooltip_text | No | _empty_ | The text shown as a tooltip. You can use tokens to replace data in your text. For example "Name: {display_name}"
 popup_text | No | _empty_ | The text shown as a popup. This text can also be put inside the shortcode tag. You can use tokens to replace data in your text.
 popup_property | No | _empty_ | Property to show in the popup. For example `first_name` (when using the `Contact.get` api).
