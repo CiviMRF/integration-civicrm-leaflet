@@ -113,6 +113,9 @@ Below is an example function.
 
 ```
 
+**Available hooks**
+
+* `integration_civicrm_leaflet_alter_filter_fields`: which allows you to alter the callback functions to display a filter field. See `integration_civicrm_leaflet.api.php` for an example implementation.
 
 
 **Funded by**
