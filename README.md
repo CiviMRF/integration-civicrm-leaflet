@@ -8,9 +8,11 @@ Funded by CiviCoop, civiservice.de, Bundesverband Soziokultur e.V.
 ## Usage
 You can use the short code as follows:
 
+```
 [leaflet-civicrm-api entity=.. action=... lng_property='longitude' lat_property='latitude' profile=local tooltip_text='Name: {display_name}' ...]
 <strong>{display_name}</strong>
 [/leaflet-civicrm-api]
+```
 
 The following options are possible within the tag:
 
