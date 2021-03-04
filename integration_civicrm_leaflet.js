@@ -136,7 +136,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
     // See https://leafletjs.com/reference-1.7.1.html#marker
     // for more information on what kind of markers you can return.
     // For example with a custom logo when the data of contact_type is Individual is shown.
-    if (feature.properties.contact_type == 'Individual') {
+    /*if (feature.properties.contact_type == 'Individual') {
       var customIcon = L.icon({
         iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-orange.png',
         shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
@@ -147,10 +147,16 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
         popupAnchor:  [-3, -76]
       });
       return L.marker(latlng, {icon: customIcon});
-    }
+    }*/
     return L.marker(latlng);
   };
 
+  /**
+   * Function to convert a date value to CiviCRM's format (yyyymmdd)
+   * 
+   * @param dateValue
+   * @returns {string}
+   */
   var formatDateForCiviCRM = function (dateValue) {
     var dateObject = new Date(dateValue);
     var strDate = (dateObject.getDate()).toString().padStart(2, '0');
