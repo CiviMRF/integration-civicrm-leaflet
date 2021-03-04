@@ -30,7 +30,7 @@ popup_property | No | _empty_ | Property to show in the popup. For example `firs
 table_view | No | _empty_ | Add this if you want the popup to hold a table with all the data.
 marker_callback | No | CiviCRMLeaflet.defaultMarker | Javascript function to replace the default marker.
 tooltip_callback | No | CiviCRMLeaflet.defaultTooltip | Javascript function to replace a custom tooltip text.
-popup_callback | No | CiviCRMLeaflet.defaultTooltip | Javascript function to replace a custom tooltip text.
+popup_callback | No | CiviCRMLeaflet.defaultFeature | Javascript function to replace a custom popup text.
 
 **Tokens**
 
