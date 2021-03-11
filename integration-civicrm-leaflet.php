@@ -42,23 +42,23 @@ add_action( 'wp_enqueue_scripts', 'integration_civicrm_leaflet_enqueue_scripts')
 
 function integration_civicrm_leaflet_enqueue_scripts() {
   // Add the JS and css for leaflet cluster markers.
-  wp_enqueue_style('leaflet_clustermarker_stylesheet_default', 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css', Array('leaflet_stylesheet'), null, false);
-  wp_enqueue_style('leaflet_clustermarker_stylesheet', 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css', Array('leaflet_stylesheet'), null, false);
+  wp_enqueue_style('leaflet_clustermarker_stylesheet_default', plugin_dir_url( __FILE__ ).'packages/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css', Array('leaflet_stylesheet'), null, false);
+  wp_enqueue_style('leaflet_clustermarker_stylesheet', plugin_dir_url( __FILE__ ).'packages/Leaflet.markercluster-1.4.1/dist/MarkerCluster.css', Array('leaflet_stylesheet'), null, false);
   wp_enqueue_style( 'integration_civicrm_leaflet_stylesheet', plugin_dir_url( __FILE__ ) . 'integration_civicrm_leaflet.css', array(), null, false );
-  wp_enqueue_script('leaflet_clustermarker_js', 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js', Array('leaflet_js'), null, true);
+  wp_enqueue_script('leaflet_clustermarker_js', plugin_dir_url( __FILE__ ).'packages/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js', Array('leaflet_js'), null, true);
   wp_enqueue_script( 'integration_civicrm_leaflet_js', plugin_dir_url( __FILE__ ) . 'integration_civicrm_leaflet.js', array( 'leaflet_js' ), null, false );
 }
 
 function integration_civicrm_leaflet_data() {
-  $lat_property = $_POST['lat_property'];
-  $lng_property = $_POST['lng_property'];
-  $addr_property = $_POST['addr_property'];
-  $apiEntity = $_POST['api_entity'];
-  $apiAction = $_POST['api_action'];
-  $apiProfileId = $_POST['api_profile_id'];
+  $lat_property = sanitize_text_field($_POST['lat_property']);
+  $lng_property = sanitize_text_field($_POST['lng_property']);
+  $addr_property = sanitize_text_field($_POST['addr_property']);
+  $apiEntity = sanitize_text_field($_POST['api_entity']);
+  $apiAction = sanitize_text_field($_POST['api_action']);
+  $apiProfileId = sanitize_text_field($_POST['api_profile_id']);
   $apiOptions['limit'] = 0;
-  $apiOptions['cache'] = $_POST['cache'];
-  $apiParams = isset($_POST['api_params']) ? $_POST['api_params'] : [];
+  $apiOptions['cache'] = sanitize_text_field($_POST['cache']);
+  $apiParams = isset($_POST['api_params']) ? integration_civicrm_leaflet_recursive_sanitize_api_params($_POST['api_params']) : array();
 
   $reply = integration_civicrm_leaflet_api($apiEntity, $apiAction, $apiParams, $apiOptions, $apiProfileId);
   $features = [];
@@ -91,6 +91,26 @@ function integration_civicrm_leaflet_data() {
   $return['features'] = $features;
   echo json_encode($return, JSON_PRETTY_PRINT);
   wp_die();
+}
+
+/**
+ * Recursive sanitation for an array
+ * Taken from: https://wordpress.stackexchange.com/a/255238
+ *
+ * @param $array
+ * @return mixed
+ */
+function integration_civicrm_leaflet_recursive_sanitize_api_params($api_params) {
+  foreach ( $api_params as $key => &$value ) {
+    if ( is_array( $value ) ) {
+      $value = integration_civicrm_leaflet_recursive_sanitize_api_params($value);
+    }
+    else {
+      $value = sanitize_text_field( $value );
+    }
+  }
+
+  return $api_params;
 }
 
 /**
