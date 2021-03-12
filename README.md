@@ -12,7 +12,10 @@ You can use the short code as follows:
 [leaflet-civicrm-api entity=.. action=... lng_property='longitude' lat_property='latitude' profile=local tooltip_text='Name: {display_name}' ...]
 <strong>{display_name}</strong>
 [/leaflet-civicrm-api]
+
 ```
+
+Add the short code `[leaflet-map]` to show the map. See https://wordpress.org/plugins/leaflet-map/ on how you can configure the `[leaflet-map]` short code.
 
 The following options are possible within the tag:
 
@@ -125,8 +128,8 @@ Bugs can be reported at [Github](https://github.com/CiviMRF/integration-civicrm-
 # Contributing
 
 The code of this plugin is published and maintained at [Github](https://github.com/CiviMRF/integration-civicrm-leaflet).
-The plugin is also published at [Wordpress.org](https://wordpress.org/plugins/integration-civicrm-leaflet)
-and this requires that we submit each release to the [Wordpress SVN](https://plugins.svn.wordpress.org/integration-civicrm-leaflet)
+The plugin is also published at [Wordpress.org](https://wordpress.org/plugins/integration-between-leaflet-map-and-civicrm)
+and this requires that we submit each release to the [Wordpress SVN](https://plugins.svn.wordpress.org/integration-between-leaflet-map-and-civicrm)
 
 **Workflow for development**
 
@@ -145,7 +148,7 @@ Based on the instruction from [Learn with Daniel](https://learnwithdaniel.com/20
 1. To publish the release at Wordpress Plugin directory follow the following steps:
     1. Create a temp directory: `mkdir cintegration-civicrm-leaflet-tmp`
     1. Go into this directory: `cd cintegration-civicrm-leaflet-tmp`
-    1. Do an SVN checkout into SVN directory: `svn checkout --depth immediates https://plugins.svn.wordpress.org/integration-civicrm-leaflet svn`
+    1. Do an SVN checkout into SVN directory: `svn checkout --depth immediates https://plugins.svn.wordpress.org/integration-between-leaflet-map-and-civicrm svn`
     1. Clone the Github repository into Github directory: `git clone https://github.com/CiviMRF/integration-civicrm-leaflet.git github`
     1. Go into the Github directory: `cd github`
     1. Checkout the created release (in our example 1.0.0): `git checkout 1.0.0`

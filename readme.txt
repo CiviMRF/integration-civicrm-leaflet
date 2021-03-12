@@ -25,6 +25,8 @@ You can use the short code as follows:
     <strong>{display_name}</strong>
   [/leaflet-civicrm-api]
 
+Add the short code `[leaflet-map]` to show the map. See https://wordpress.org/plugins/leaflet-map/ on how you can configure the `[leaflet-map]` short code.
+
 The following options are possible within the tag:
 
 Option | Required | Default value | Description
