@@ -215,9 +215,10 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
         $class = "civicrm_leaflet_filter_checkbox_item";
         if ($i == 1) { $class .= " first"; }
         if ($i == count($filter['options'])) { $class .= " last"; }
+        $checked = 'checked="checked"';
         ?><span class="<?php echo esc_attr($class); ?>">
         <label>
-        <input type="checkbox" class="civicrm_filter_<?php echo esc_attr($filter['name']); ?>" id="civicrm_filter_<?php echo esc_attr($filter['name']); ?>_<?php echo esc_attr($value); ?>" name="civicrm_filter_<?php echo esc_attr($filter['name']); ?>[]" value="<?php echo esc_attr($value); ?>">
+        <input type="checkbox" class="civicrm_filter_<?php echo esc_attr($filter['name']); ?>" <?php echo $checked; ?>" id="civicrm_filter_<?php echo esc_attr($filter['name']); ?>_<?php echo esc_attr($value); ?>" name="civicrm_filter_<?php echo esc_attr($filter['name']); ?>[]" value="<?php echo esc_attr($value); ?>">
         <span class="civicrm_leaflet_filter_checkbox_item_label"><?php echo esc_html($label); ?></span>
         </label>
         </span><?php
