@@ -2,7 +2,7 @@
 /*
 Plugin Name: Integration between Leaflet Map and CiviCRM
 Description: Integrates data from the CiviCRM api into a Leaflet Map. You can use this plugin with Connector to CiviCRM with CiviMcRestFace (https://wordpress.org/plugins/connector-civicrm-mcrestface/)
-Version:     1.0.2
+Version:     1.0.3
 Author:      Jaap Jansma
 License:     AGPL3
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -46,7 +46,7 @@ function integration_civicrm_leaflet_enqueue_scripts() {
   wp_enqueue_style('leaflet_clustermarker_stylesheet', plugin_dir_url( __FILE__ ).'packages/Leaflet.markercluster-1.4.1/dist/MarkerCluster.css', Array('leaflet_stylesheet'), null, false);
   wp_enqueue_style( 'integration_civicrm_leaflet_stylesheet', plugin_dir_url( __FILE__ ) . 'integration_civicrm_leaflet.css', array(), null, false );
   wp_enqueue_script('leaflet_clustermarker_js', plugin_dir_url( __FILE__ ).'packages/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js', Array('leaflet_js'), null, true);
-  wp_enqueue_script( 'integration_civicrm_leaflet_js', plugin_dir_url( __FILE__ ) . 'integration_civicrm_leaflet.js', array( 'leaflet_js' ), null, false );
+  wp_enqueue_script( 'integration_civicrm_leaflet_js', plugin_dir_url( __FILE__ ) . 'integration_civicrm_leaflet.js', array( 'jquery', 'leaflet_js' ), null, false );
 }
 
 function integration_civicrm_leaflet_data() {
