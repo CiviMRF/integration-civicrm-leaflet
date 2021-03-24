@@ -5,7 +5,7 @@ Tags: leaflet, CiviCRM, map, leaflet map, api, connector, rest
 Requires at least: 5.2
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: AGPL-3.0
 
 Provides an integration between CiviCRM api and the [leaflet map](https://wordpress.org/plugins/leaflet-map/). Meaning you can create maps from CiviCRM Data.
@@ -38,5 +38,6 @@ For more documentation see: [README.md](https://github.com/CiviMRF/integration-c
 
 == Changelog ==
 
+1.0.2: Fixed issue with jQuery.
 1.0.1: Check checkbox filters by default.
 1.0.0: First version.

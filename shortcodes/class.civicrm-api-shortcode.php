@@ -157,11 +157,10 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
           return api_params;
         }
 
-        jQuery(document).on('click dblclick', '#civicrm_leaflet_map_filter', function( e ) {
+        CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
+        window.jQuery('#civicrm_leaflet_map_filter').on('click dblclick', function() {
           CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
         });
-
-        CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
       });
     </script>
     <?php

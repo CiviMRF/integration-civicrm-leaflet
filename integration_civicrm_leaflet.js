@@ -23,7 +23,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
     ajaxData.action = 'integration_civicrm_leaflet_data';
     ajaxData.api_params = apiParamCallbak();
     markers.clearLayers();
-    jQuery.post(config.ajaxUrl, ajaxData, function(response) {
+    window.jQuery.post(config.ajaxUrl, ajaxData, function(response) {
       var geoJsonData = JSON.parse(response);
       var layer = new L.GeoJSON(geoJsonData, {
         "onEachFeature": featureCallback,
@@ -40,7 +40,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
    * @returns {{length}|*|jQuery|string}
    */
    this.civicrm_leaflet_filter_value = function (filter) {
-    var val = jQuery('#civicrm_filter_'+filter).val();
+    var val = window.jQuery('#civicrm_filter_'+filter).val();
     if (val.length) {
       return val;
     }
@@ -54,8 +54,8 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
    * @returns {{IN: ({length}|*|jQuery)}}
    */
   this.civicrm_leaflet_filter_checkbox_value = function (filter) {
-    var selectedValues = jQuery("input.civicrm_filter_" + filter + ":checkbox:checked").map(function () {
-      return jQuery(this).val();
+    var selectedValues = window.jQuery("input.civicrm_filter_" + filter + ":checkbox:checked").map(function () {
+      return window.jQuery(this).val();
     }).get();
     if (selectedValues.length) {
       return {"IN": selectedValues};
@@ -64,8 +64,8 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
 
   this.civicrm_leaflet_filter_date_value = function(filter) {
 
-    var val_min = jQuery('#civicrm_filter_'+filter+'_min').val();
-    var val_max = jQuery('#civicrm_filter_'+filter+'_max').val();
+    var val_min = window.jQuery('#civicrm_filter_'+filter+'_min').val();
+    var val_max = window.jQuery('#civicrm_filter_'+filter+'_max').val();
     if (val_min.length && val_max.length) {
       return {
         "BETWEEN": [formatDateForCiviCRM(val_min), formatDateForCiviCRM(val_max)]
