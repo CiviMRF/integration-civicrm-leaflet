@@ -37,9 +37,6 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
    *
    */
   protected function getHTML($atts = '', $content = NULL) {
-    // need to get the called class to extend above variables
-    $class = self::getClass();
-
     if ($atts) {
       extract($atts);
     }

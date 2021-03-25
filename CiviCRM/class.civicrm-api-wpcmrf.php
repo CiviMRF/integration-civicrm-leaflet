@@ -25,7 +25,7 @@ class CiviCRMLeafletApiWpcmrf {
       $core = wpcmrf_get_core();
       $wpcmrf_profiles = $core->getConnectionProfiles();
       foreach($wpcmrf_profiles as $profile) {
-        $profile_name = 'wpcmrf_profile_'.$profile['id'];
+        $profile_name = $profile['label'];
         $profiles[$profile_name] = [
           'title' => $profile['label'],
           'function' => ['CiviCRMLeafletApiWpcmrf', 'api'],

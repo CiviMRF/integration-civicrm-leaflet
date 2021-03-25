@@ -2,7 +2,7 @@
 /*
 Plugin Name: Integration between Leaflet Map and CiviCRM
 Description: Integrates data from the CiviCRM api into a Leaflet Map. You can use this plugin with Connector to CiviCRM with CiviMcRestFace (https://wordpress.org/plugins/connector-civicrm-mcrestface/)
-Version:     1.0.3
+Version:     1.0.4
 Author:      Jaap Jansma
 License:     AGPL3
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
