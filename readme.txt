@@ -38,6 +38,7 @@ For more documentation see: [README.md](https://github.com/CiviMRF/integration-c
 
 == Changelog ==
 
+1.0.4: Fixed issue with CiviMcRestFace.
 1.0.3: Fixed issue with jQuery.
 1.0.2: Fixed issue with jQuery.
 1.0.1: Check checkbox filters by default.
