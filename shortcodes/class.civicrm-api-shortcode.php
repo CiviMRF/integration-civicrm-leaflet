@@ -37,6 +37,9 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
    *
    */
   protected function getHTML($atts = '', $content = NULL) {
+    // need to get the called class to extend above variables
+    $class = self::getClass();
+
     if ($atts) {
       extract($atts);
     }
@@ -133,12 +136,15 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
 
         function apiParamCallback() {
           var filters = {
-            <?php foreach($filters as $filterName => $filter) {
+            <?php
+            $i = 0;
+            foreach($filters as $filterName => $filter) {
               $suffix = ",";
-              if (array_key_last($filters) == $filterName) {
+              if ($i === count($filters)) {
                 $suffix = "";
               }
               echo '"'.esc_js($filter['name']).'": '.esc_js($filter['js_value_function']).esc_js($suffix);
+              $i++;
             } ?>
           };
 
