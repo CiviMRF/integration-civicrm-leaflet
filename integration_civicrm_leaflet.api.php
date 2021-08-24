@@ -18,7 +18,7 @@
 
 /** Hooks provided by this plugin */
 
-add_filter('integration_civicrm_leaflet_alter_filter_fields', function($filters) {
+add_filter('integration_civicrm_leaflet_alter_filter_fields', function($filters, $name) {
   // Add your own custom filter handlers.
   // Each filter has a input_callback which is responsible for rendering the form elements
   // And each filter has a js_value_function which is responsible for returning the
@@ -29,7 +29,7 @@ add_filter('integration_civicrm_leaflet_alter_filter_fields', function($filters)
       $filters[$filer_name]['js_value_function'] = 'example_option_field_js_value_function_'.$filter['name'];
     }
   }
-});
+}, 10, 2);
 
 /**
  * @param $filter

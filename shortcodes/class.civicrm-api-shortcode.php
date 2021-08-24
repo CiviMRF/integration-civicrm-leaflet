@@ -26,6 +26,11 @@ require_once LEAFLET_MAP__PLUGIN_DIR . 'shortcodes/class.shortcode.php';
 class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
 
   /**
+   * @var int
+   */
+  private static $_id = 0;
+
+  /**
    * Generate HTML from the shortcode
    * Maybe won't always be required
    *
@@ -38,6 +43,7 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
    */
   protected function getHTML($atts = '', $content = NULL) {
     // need to get the called class to extend above variables
+    self::$_id ++;
     $class = self::getClass();
 
     if ($atts) {
@@ -48,6 +54,10 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
     $entity = empty($entity) ? '' : $entity;
     $action = empty($action) ? '' : $action;
     $profile = empty($profile) ? '' : $profile;
+    $filter_header = empty($filter_header) ? '' : $filter_header;
+    $filter_button_label = empty($filter_button_label) ? 'Filter' : $filter_button_label;
+    $name = empty($name) ? 'source_'.self::$_id : $name;
+    $name = sanitize_key($name);
     if (empty($entity) || empty($action) || empty($profile)) {
       return "";
     }
@@ -68,6 +78,8 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
       foreach ($fields['values'] as $field) {
           if (isset($field['api.filter']) && $field['api.filter']) {
               $filter = $field;
+              $filter['api_name'] = $filter['name'];
+              $filter['name'] = $name . '_' . $filter['name'];
               $filter['input_callback'] = [$this, 'displayFilterField'];
               $filter['js_value_function'] = 'CiviCRMLeaflet.civicrm_leaflet_filter_value';
               if (isset($filter['options']) && is_array($filter['options'])) {
@@ -81,7 +93,7 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
           }
       }
     }
-    apply_filters('integration_civicrm_leaflet_alter_filter_fields', $filters);
+    $filters = apply_filters('integration_civicrm_leaflet_alter_filter_fields', $filters, $name);
 
     if ($content) {
       $content = str_replace(array("\r\n", "\n", "\r"), '<br>', $content);
@@ -110,7 +122,8 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
     ?>
     <script>
       window.WPLeafletMapPlugin = window.WPLeafletMapPlugin || [];
-      window.WPLeafletMapPlugin.push(function () {
+
+      function CiviCRMLeafletMapPlugin<?php echo esc_js($name); ?>(name) {
         var apiCall = {
           'api_entity': '<?php echo esc_js($entity); ?>',
           'api_action': '<?php echo esc_js($action); ?>',
@@ -118,7 +131,8 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
           'cache': '<?php echo esc_js($cache); ?>',
           'lng_property': '<?php echo esc_js($lng_property); ?>',
           'lat_property': '<?php echo esc_js($lat_property); ?>',
-          'addr_property': '<?php echo esc_js($addr_property); ?>'
+          'addr_property': '<?php echo esc_js($addr_property); ?>',
+          'name': '<?php echo esc_js($name); ?>'
         };
 
         var CiviCRMLeaflet = new IntegrationCiviCRMLeaflet(
@@ -126,55 +140,90 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
             '<?php echo esc_js($popup_text); ?>',
             '<?php echo esc_js($popup_property); ?>',
             apiCall,
-            '<?php echo esc_js(admin_url( 'admin-ajax.php' )); ?>'
+            '<?php echo esc_js(admin_url('admin-ajax.php')); ?>',
+            name
         );
 
-        function featureCallback(feature, layer) {
-          <?php echo esc_js($featureCallback); ?>(feature, layer);
-          <?php echo esc_js($tooltipCallback); ?>(feature, layer);
-        }
+        return CiviCRMLeaflet;
+      }
 
-        function apiParamCallback() {
-          var filters = {
-            <?php
-            $i = 0;
-            foreach($filters as $filterName => $filter) {
-              $suffix = ",";
-              if ($i === count($filters)) {
-                $suffix = "";
-              }
-              echo '"'.esc_js($filter['name']).'": '.esc_js($filter['js_value_function']).esc_js($suffix);
-              $i++;
-            } ?>
-          };
+      function UpdateCiviCRMLeafletMapPlugin<?php echo esc_js($name); ?>(CiviCRMLeaflet) {
+      function featureCallback(feature, layer) {
+        <?php echo esc_js($featureCallback); ?>(feature, layer);
+        <?php echo esc_js($tooltipCallback); ?>(feature, layer);
+      }
 
-          var api_params = {};
-          for(var filterName in filters) {
-            var jsValueFunction = filters[filterName];
-            var filterValue = jsValueFunction(filterName);
-            if (filterValue !== undefined) {
-              api_params[filterName] = filterValue;
+      function apiParamCallback() {
+        var filters = {
+          <?php
+          $i = 0;
+          foreach ($filters as $filterName => $filter) {
+            $suffix = ",";
+            if ($i === count($filters)) {
+              $suffix = "";
             }
-          }
+            echo '"' . esc_js($filter['name']) . '": ' . esc_js($filter['js_value_function']) . esc_js($suffix);
+            $i++;
+          } ?>
+        };
 
-          return api_params;
+        var filterApiNames = {
+          <?php
+          $i = 0;
+          foreach ($filters as $filterName => $filter) {
+            $suffix = ",";
+            if ($i === count($filters)) {
+              $suffix = "";
+            }
+            echo '"' . esc_js($filter['name']) . '": "' . esc_js($filter['api_name']) . '"' . esc_js($suffix);
+            $i++;
+          } ?>
+        };
+
+        var api_params = {};
+        for (var filterName in filters) {
+          var jsValueFunction = filters[filterName];
+          var filterValue = jsValueFunction(filterName);
+          var filterApiName = filterApiNames[filterName];
+          if (filterValue !== undefined) {
+            api_params[filterApiName] = filterValue;
+          }
         }
 
-        CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
-        window.jQuery('#civicrm_leaflet_map_filter').on('click dblclick', function() {
-          CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
-        });
+        return api_params;
+      }
+
+      CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
+    }
+
+    var CiviCRMLeafletMap<?php echo esc_js($name); ?>;
+    window.WPLeafletMapPlugin.push(function () {
+      CiviCRMLeafletMap<?php echo esc_js($name); ?> = CiviCRMLeafletMapPlugin<?php echo esc_js($name); ?>('<?php echo esc_js($name); ?>');
+      UpdateCiviCRMLeafletMapPlugin<?php echo esc_js($name); ?>(CiviCRMLeafletMap<?php echo esc_js($name); ?>);
+    });
+
+    jQuery(function($) {
+      $('#civicrm_leaflet_map_filter_<?php echo esc_js($name); ?>').on('click dblclick', function () {
+        UpdateCiviCRMLeafletMapPlugin<?php echo esc_js($name); ?>(CiviCRMLeafletMap<?php echo esc_js($name); ?>);
       });
+    });
     </script>
     <?php
     $buffer = ob_get_clean();
     if (count($filters)) {
+        $buffer .= '<div id="filter_' . esc_attr($name).'">';
+        if ($filter_header) {
+            $buffer .= esc_html($filter_header);
+        }
         foreach($filters as $filter) {
             $buffer .= '<div class="civicrm_leaflet_filter" id="civicrm_leaflet_filter_wrapper_'.esc_attr($filter['name']).'">';
             $buffer .= call_user_func($filter['input_callback'], $filter);
             $buffer .= '</div>';
         }
-        $buffer .= '<input type="submit" id="civicrm_leaflet_map_filter" value="Filter" />';
+        $buffer .= '<input type="submit" id="civicrm_leaflet_map_filter_' . esc_attr($name) . '" value="' . esc_attr($filter_button_label) . '" />';
+        $buffer .= '</div>';
+
+      Leaflet_CiviCRM_Api_Filters_Shortcode::addFilters($name);
     }
     return $buffer;
   }

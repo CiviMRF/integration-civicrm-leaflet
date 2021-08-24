@@ -32,8 +32,10 @@ define('INTEGRATION_LEAFLET_CIVICRM_ROOT_PATH', plugin_dir_path(__FILE__));
 add_action('init', function() {
   require_once INTEGRATION_LEAFLET_CIVICRM_ROOT_PATH . "CiviCRM/class.civicrm-api-local.php";
   require_once INTEGRATION_LEAFLET_CIVICRM_ROOT_PATH . "CiviCRM/class.civicrm-api-wpcmrf.php";
+  require_once INTEGRATION_LEAFLET_CIVICRM_ROOT_PATH . "shortcodes/class.civicrm-api-filters-shortcode.php";
   require_once INTEGRATION_LEAFLET_CIVICRM_ROOT_PATH . "shortcodes/class.civicrm-api-shortcode.php";
   add_shortcode('leaflet-civicrm-api', array('Leaflet_CiviCRM_Api_Shortcode', 'shortcode'));
+  add_shortcode('leaflet-civicrm-api-combined-filter-button', array('Leaflet_CiviCRM_Api_Filters_Shortcode', 'shortcode'));
   add_action( 'wp_ajax_integration_civicrm_leaflet_data', 'integration_civicrm_leaflet_data' );
   add_action( 'wp_ajax_nopriv_integration_civicrm_leaflet_data', 'integration_civicrm_leaflet_data' );
 });

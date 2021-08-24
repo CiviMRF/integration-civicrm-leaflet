@@ -34,10 +34,18 @@ table_view | No | _empty_ | Add this if you want the popup to hold a table with 
 marker_callback | No | CiviCRMLeaflet.defaultMarker | Javascript function to replace the default marker.
 tooltip_callback | No | CiviCRMLeaflet.defaultTooltip | Javascript function to replace a custom tooltip text.
 popup_callback | No | CiviCRMLeaflet.defaultFeature | Javascript function to replace a custom popup text.
+name | No | | Set a system name for this source. This name is used to identify this source. Useful if you have multiple sources in your map.
+filter_header | No | | Set a custom heading above the filter.
+filter_button_label | No | Filter | Set a custom label for the filter button.
 
 **Tokens**
 
 The tokens are the name of the fields in the api/data processor. So for example the `Contact.get` api returns a field `first_name` and the token `{first_name}` will then be replaced by the content of first name.
+
+## Multiple data sources
+
+Each short code `[leaflet-civicrm-api]` is displayed as a separate layer on the map. For each short code the filter fields are rendered with its own button to filter.  
+If you want to have a combined button for all filter fields use the following short code: `[leaflet-civicrm-api-combined-filter-button filter_header='<h2>Header above button, optional</h2>' filter_button_label='Filter button label, optional']`. 
 
 ## Customizations
 

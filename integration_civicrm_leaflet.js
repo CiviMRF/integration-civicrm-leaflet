@@ -1,11 +1,12 @@
-function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, apiSettings, ajaxUrl) {
+function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, apiSettings, ajaxUrl, name) {
 
   var config = {
     tooltip_text: window.WPLeafletMapPlugin.unescape(tooltip_text),
     popup_text: window.WPLeafletMapPlugin.unescape(popup_text),
     popup_property: popup_property,
     api: apiSettings,
-    ajaxUrl: ajaxUrl
+    ajaxUrl: ajaxUrl,
+    name: name
   };
 
   var map = window.WPLeafletMapPlugin.getCurrentMap();
