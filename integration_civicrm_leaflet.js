@@ -1,3 +1,5 @@
+var integrationCiviCRMLeafletClusterLayer;
+
 function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, apiSettings, ajaxUrl, name) {
 
   var config = {
@@ -10,8 +12,10 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
   };
 
   var map = window.WPLeafletMapPlugin.getCurrentMap();
-  var markers = new L.markerClusterGroup();
-  map.addLayer(markers);
+  if (!integrationCiviCRMLeafletClusterLayer) {
+    integrationCiviCRMLeafletClusterLayer = new L.markerClusterGroup();
+    map.addLayer(integrationCiviCRMLeafletClusterLayer);
+  }
 
   /**
    * Updates the CiviCRM layer with data from CiviCRM.
@@ -23,14 +27,14 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
     var ajaxData = config.api;
     ajaxData.action = 'integration_civicrm_leaflet_data';
     ajaxData.api_params = apiParamCallbak();
-    markers.clearLayers();
+    integrationCiviCRMLeafletClusterLayer.clearLayers();
     window.jQuery.post(config.ajaxUrl, ajaxData, function(response) {
       var geoJsonData = JSON.parse(response);
       var layer = new L.GeoJSON(geoJsonData, {
         "onEachFeature": featureCallback,
         "pointToLayer": markerCallback
       });
-      markers.addLayer(layer);
+      integrationCiviCRMLeafletClusterLayer.addLayer(layer);
     });
   };
 

@@ -37,6 +37,8 @@ popup_callback | No | CiviCRMLeaflet.defaultFeature | Javascript function to rep
 name | No | | Set a system name for this source. This name is used to identify this source. Useful if you have multiple sources in your map.
 filter_header | No | | Set a custom heading above the filter.
 filter_button_label | No | Filter | Set a custom label for the filter button.
+icon_url | No | | Url to icon for the marker. For example: https://leafletjs.com/examples/custom-icons/leaf-orange.png
+icon | No | | Icon object for `L.icon`. See https://leafletjs.com/reference.html#icon. Make sure you use html entities (e.g. use `&lsqb;` for `[` and `&rsqb;` for `]`). An example: `icon='{"iconUrl":"https://leafletjs.com/examples/custom-icons/leaf-orange.png","shadowUrl":"https://leafletjs.com/examples/custom-icons/leaf-shadow.png","iconSize":&lsqb;38,95&rsqb;,"shadowSize":&lsqb;50,64&rsqb;,"iconAnchor":&lsqb;22,94&rsqb;,"shadowAnchor":&lsqb;4,62&rsqb;,"popupAnchor":&lsqb;-3,-76&rsqb;}'`
 
 **Tokens**
 

@@ -44,7 +44,6 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
   protected function getHTML($atts = '', $content = NULL) {
     // need to get the called class to extend above variables
     self::$_id ++;
-    $class = self::getClass();
 
     if ($atts) {
       extract($atts);
@@ -58,6 +57,8 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
     $filter_button_label = empty($filter_button_label) ? 'Filter' : $filter_button_label;
     $name = empty($name) ? 'source_'.self::$_id : $name;
     $name = sanitize_key($name);
+    $icon = empty($icon) ? '' : json_decode(html_entity_decode($icon, ENT_COMPAT | ENT_HTML5), true);
+    $icon_url = empty($icon_url) ? '' : $icon_url;
     if (empty($entity) || empty($action) || empty($profile)) {
       return "";
     }
@@ -111,6 +112,12 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
     $tooltip_text = trim($tooltip_text);
     $table_view = filter_var(empty($table_view) ? 0 : $table_view, FILTER_VALIDATE_INT);
     $tooltipCallback = empty($tooltip_callback) ? 'CiviCRMLeaflet.defaultTooltip': $tooltip_callback;
+    if (empty($icon) && !empty($icon_url)) {
+      $icon = ['iconUrl' => $icon_url];
+    }
+    if (!empty($icon)) {
+      $marker_callback = 'customIcon';
+    }
     $markerCallback = empty($marker_callback) ? 'CiviCRMLeaflet.defaultMarker': $marker_callback;
     if ($table_view) {
       $featureCallback = empty($popup_callback) ? 'CiviCRMLeaflet.tableFeature': $popup_callback;
@@ -193,6 +200,14 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
         return api_params;
       }
 
+      function customIcon (feature, latlng) {
+        <?php if (!empty($icon)) { ?>
+            return L.marker(latlng, {"icon": L.icon(<?php echo json_encode($icon, JSON_PRETTY_PRINT); ?>)});
+        <?php } else { ?>
+            return L.marker(latlng);
+        <?php } ?>
+      }
+
       CiviCRMLeaflet.updateCiviCRMLayer(apiParamCallback, featureCallback, <?php echo esc_js($markerCallback); ?>);
     }
 
@@ -213,7 +228,7 @@ class Leaflet_CiviCRM_Api_Shortcode extends Leaflet_Shortcode {
     if (count($filters)) {
         $buffer .= '<div id="filter_' . esc_attr($name).'">';
         if ($filter_header) {
-            $buffer .= esc_html($filter_header);
+            $buffer .= $filter_header;
         }
         foreach($filters as $filter) {
             $buffer .= '<div class="civicrm_leaflet_filter" id="civicrm_leaflet_filter_wrapper_'.esc_attr($filter['name']).'">';

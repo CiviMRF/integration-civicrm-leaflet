@@ -58,7 +58,7 @@ class Leaflet_CiviCRM_Api_Filters_Shortcode {
     <?php
     $buffer = ob_get_clean();
     if ($filter_header) {
-      $buffer .= esc_html($filter_header);
+      $buffer .= $filter_header;
     }
     $buffer .= '<input type="submit" id="civicrm_leaflet_map_filter" value="' . esc_attr($filter_button_label) . '" />';
     return $buffer;
