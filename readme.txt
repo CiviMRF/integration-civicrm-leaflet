@@ -3,9 +3,9 @@ Contributors: jaapjansma
 Donate link: https://github.com/CiviMRF/integration-civicrm-leaflet
 Tags: leaflet, CiviCRM, map, leaflet map, api, connector, rest
 Requires at least: 5.2
-Tested up to: 5.6
+Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: AGPL-3.0
 
 Provides an integration between CiviCRM api and the [leaflet map](https://wordpress.org/plugins/leaflet-map/). Meaning you can create maps from CiviCRM Data.
@@ -38,6 +38,7 @@ For more documentation see: [README.md](https://github.com/CiviMRF/integration-c
 
 == Changelog ==
 
+1.0.8: Fixed issue with empty tokens.
 1.0.7: Made it easier to set custom makers. Also clustering works with all data sources.
 1.0.6: Added possibility to have multiple data sources.
 1.0.5: Fixed issue with php 7.1, and 7.2

@@ -94,7 +94,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
    */
   this.defaultFeature = function (feature, layer) {
     var props = feature.properties || {};
-    var text = window.WPLeafletMapPlugin.template(config.popup_text, feature.properties);
+    var text = this.template(config.popup_text, feature.properties);
     if (config.popup_property) {
       text = props[config.popup_property];
     }
@@ -125,7 +125,7 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
    */
   this.defaultTooltip = function  (feature, layer) {
     if (config.tooltip_text) {
-      var tooltip = window.WPLeafletMapPlugin.template(config.tooltip_text, feature.properties);
+      var tooltip = this.template(config.tooltip_text, feature.properties);
       layer.bindTooltip(tooltip);
     }
   };
@@ -168,5 +168,107 @@ function IntegrationCiviCRMLeaflet (tooltip_text, popup_text, popup_property, ap
     var strMonth = (dateObject.getMonth() +1).toString().padStart(2, '0');
     var strYear = (dateObject.getFullYear()).toString().padStart(4, '0');
     return strYear+strMonth+strDate;
+  };
+
+  var templateRe = /\{ *(.*?) *\}/g;
+
+  /**
+   * It interpolates variables in curly brackets (regex above)
+   *
+   * ex: "Property Value: {property_key}"
+   *
+   * @param {string} str
+   * @param {object} data e.g. feature.properties
+   */
+  this.template = function (str, data) {
+    if (data == null) {
+      return str;
+    }
+
+    return str.replace(templateRe, function (match, key) {
+      var obj = this.liquid(key);
+      var value = this.parseKey(data, obj.key);
+      if (value === undefined && obj.default) {
+        return obj.default;
+      } else if (value === undefined && data.hasOwnProperty(key)) {
+        return '';
+      } else if (value === undefined) {
+        return match;
+      }
+      return value;
+    }.bind(this));
+  };
+
+  /**
+   * parses liquid tags from a string
+   *
+   * @param {string} str
+   */
+  this.liquid = function (str) {
+    var tags = str.split(' | ');
+    var obj = {};
+
+    // removes initial variable from array
+    var key = tags.shift();
+
+    for (var i = 0, len = tags.length; i < len; i++) {
+      var tag = tags[i].split(': ');
+      var tagName = tag.shift();
+      var tagValue = tag.join(': ') || true;
+
+      obj[tagName] = tagValue;
+    }
+
+    // always preserve the original string
+    obj.key = key;
+
+    return obj;
+  };
+
+  /**
+   * It uses strToPath to access a possibly nested path value
+   *
+   * @param {object} obj
+   * @param {string} key
+   */
+  this.parseKey = function (obj, key) {
+    var arr = this.strToPath(unescape(key));
+    var value = obj;
+
+    for (var i = 0, len = arr.length; i < len; i++) {
+      value = value[arr[i]];
+      if (!value) {
+        return undefined;
+      }
+    }
+
+    return value;
+  };
+
+  /**
+   * Converts nested object keys to array
+   *
+   * ex: `this.that['and'].theOther[4]` ->
+   *     ['this', 'that', 'and', 'theOther', '4']
+   * @param {string} key
+   */
+  this.strToPath = function (key) {
+    if (key == null) {
+      return [];
+    }
+    /** used in strToPath */
+    var strToPathRe = /[.‘’'“”"\[\]]+/g;
+    var input = key.split(strToPathRe);
+    var output = [];
+
+    // failsafe for all empty strings;
+    // mostly catches brackets at the end of a string
+    for (var i = 0, len = input.length; i < len; i++) {
+      if (input[i] !== '') {
+        output.push(input[i]);
+      }
+    }
+
+    return output;
   };
 }
